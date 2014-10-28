@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+android:background="@drawable/transparent_black"
+android:orientation="vertical">
+<RelativeLayout android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:orientation="horizontal"
+            android:id="@+id/choosebeep_beeprow1"></LinearLayout>
+        
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:orientation="horizontal"
+            android:id="@+id/choosebeep_beeprow2"></LinearLayout>
+        
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="30dip"
+            android:orientation="horizontal"
+            android:id="@+id/choosebeep_beeprow3"></LinearLayout>
+               
+        
+    </LinearLayout>
+    
+</HorizontalScrollView>
+<ProgressBar 
+       android:id="@+id/beepslist_loading"
+       android:layout_width="40dip"
+       android:layout_height="40dip" 
+       android:indeterminate="true"
+       android:layout_centerInParent="true"
+       android:visibility="visible" />
+</RelativeLayout>
+
+
+<LinearLayout android:layout_width="match_parent"
+            android:layout_height="40px"
+            android:orientation="horizontal"
+            android:id="@+id/choosebeep_iconbar">
+    
+    <ImageButton
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_weight="1"
+        android:src="@drawable/ic_action_important" 
+        android:scaleType="fitCenter"/>
+    
+    <ImageButton
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_weight="1"
+        android:src="@drawable/ic_action_back"
+        android:scaleType="fitCenter" />
+     
+    <ImageButton
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_weight="1"
+        android:src="@drawable/ic_action_forward"
+        android:scaleType="fitCenter" />
+     
+    <ImageButton
+        android:layout_width="0dip"
+        android:layout_height="35dip"
+        android:layout_weight="1"
+        android:src="@drawable/ic_action_refresh"
+        android:scaleType="fitCenter" />
+    
+        </LinearLayout>        
+
+  </LinearLayout>      

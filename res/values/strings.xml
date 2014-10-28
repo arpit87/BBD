@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">BBD</string>
+    <string name="crash_toast_text">oyy teri , kuch phata</string>
+    <string name="dev_bbd_id">786</string>
+    <string name="dev_nick">chutzpa</string>
+    <string name="dev_first_msg">BAPP pin share karo, friends ko add karo and beep karo.</string>
+
+</resources>

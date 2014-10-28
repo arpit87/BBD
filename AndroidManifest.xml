@@ -1,0 +1,71 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.BhakBhosdi"
+    android:versionCode="1"
+    android:versionName="BBD 1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="12"
+        android:targetSdkVersion="18" />
+    
+   	
+	<uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />    
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
+	<uses-permission android:name="android.permission.READ_LOGS"/>
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/launcher"
+        android:label="@string/app_name"
+        android:name="com.BhakBhosdi.Platform.BhakBhosdi"        
+        android:theme="@style/AppTheme" >
+        
+         	<service android:name="com.BhakBhosdi.ChatService.ChatService" 
+			android:label="Chat Service">
+			  <intent-filter>
+				<action android:name="com.BhakBhosdi.ChatService.ChatService"></action>
+			</intent-filter>
+		</service>
+      
+             
+        <activity
+        android:name="com.BhakBhosdi.Activities.LoginActivity" 
+        android:theme="@android:style/Theme.NoTitleBar" 
+        >
+    	</activity>
+        
+        <activity
+            android:name="com.BhakBhosdi.Activities.BhakBhosdiActivity" 
+            android:theme="@android:style/Theme.NoTitleBar" >
+              <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>   
+        
+        <provider
+           android:name="com.BhakBhosdi.provider.HistoryContentProvider"
+           android:authorities="com.BhakBhosdi.provider.HistoryContentProvider" />
+
+       <provider
+               android:name="com.BhakBhosdi.provider.BlockedUsersProvider"
+               android:authorities="com.BhakBhosdi.provider.BlockedUsersProvider" />
+
+       <provider
+               android:name="com.BhakBhosdi.provider.ChatHistoryProvider"
+               android:authorities="com.BhakBhosdi.provider.ChatHistoryProvider" />
+
+       <provider
+               android:name="com.BhakBhosdi.provider.ActiveChatProvider"
+               android:authorities="com.BhakBhosdi.provider.ActiveChatProvider" />
+
+       <provider
+                android:name="com.BhakBhosdi.provider.EventsLoggingProvider"
+                android:authorities="com.BhakBhosdi.provider.EventsLoggingProvider" />
+        
+        
+    </application>
+
+</manifest>

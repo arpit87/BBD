@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" 
+    android:background="@drawable/gradient_light_brown">
+    
+    <ImageView android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="6"
+        android:src="@drawable/bbdlogo_brwn"
+        android:scaleType="fitCenter"
+        android:paddingTop="40dip"
+        android:paddingLeft="40dip"
+        android:paddingRight="40dip"
+        android:paddingBottom="10dip"/>
+    
+    <TextView 
+        android:id="@+id/login_apptitle"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:text="bakchodapp"
+        android:gravity="center_horizontal"
+        android:textColor="@color/very_light_brown"
+        android:textSize="30dip"/>
+    
+    <EditText 
+        android:id="@+id/login_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight=".7"
+        android:textSize="20dip"
+        android:textColorHint="@color/black"
+        android:hint="nick...."
+        android:layout_gravity="center_horizontal"
+        android:gravity="left"
+        android:textColor="@color/black"
+        android:layout_marginRight="50dip"
+        android:layout_marginLeft="50dip"
+        />
+    <Button
+        android:id="@+id/login_startbutton" 
+        android:layout_width="wrap_content"
+        android:layout_height="0dip"
+        android:layout_weight="1"
+        android:layout_marginTop="10dip"
+        android:text="Start Bakchodi"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textColor="@color/very_light_brown"
+        android:background="@color/very_dark_brown"
+        android:paddingLeft="30dip"
+        android:paddingRight="30dip"/>
+    <View android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_weight=".7"
+        android:background="@android:color/transparent"/>
+</LinearLayout>

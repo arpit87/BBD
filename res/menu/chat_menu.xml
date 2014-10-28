@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <item android:id="@+id/chat_menu_hopin_profile" android:title="Hopin Profile" android:showAsAction="never"></item>
+    <item android:id="@+id/chat_menu_fb_profile" android:title="FB Profile" android:showAsAction="never"></item>
+    
+    <!-- Always keep block at last, its required in onoption menu create -->
+     <item android:id="@+id/chat_menu_block" android:title="Block" android:showAsAction="never"></item>   
+      
+</menu>

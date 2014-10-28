@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/transparent_black">
+<EditText
+    android:id="@+id/blank_beep_edittest" 
+    android:layout_width="wrap_content"
+    android:layout_height="25dip"
+    android:textSize="20dip"
+    android:background="@drawable/beep_yellow_bordered"
+    android:hint="             "
+    android:textColorHint="@color/white"
+    android:textColor="@color/white" 
+    android:paddingRight="30dip"
+    android:paddingLeft="5dip">
+</EditText>
+
+<ImageButton 
+    android:id="@+id/blank_beep_sendButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_action_play"
+    android:layout_alignTop="@id/blank_beep_edittest"
+    android:layout_alignBottom="@id/blank_beep_edittest"
+    android:layout_alignRight="@id/blank_beep_edittest"/>
+    
+</RelativeLayout>
