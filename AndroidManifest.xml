@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.BhakBhosdi"
-    android:versionCode="1"
+    package="com.bakarapp"
+    android:versionCode="3"
     android:versionName="BBD 1.0" >
 
     <uses-sdk
@@ -17,28 +17,38 @@
     
     <application
         android:allowBackup="true"
-        android:icon="@drawable/launcher"
+        android:icon="@drawable/launcher2"
         android:label="@string/app_name"
-        android:name="com.BhakBhosdi.Platform.BhakBhosdi"        
-        android:theme="@style/AppTheme" >
+        android:name="com.bakarapp.Platform.BhakBhosdi"        
+        android:theme="@style/AppTheme" 
+        >
         
-         	<service android:name="com.BhakBhosdi.ChatService.ChatService" 
+         	<service android:name="com.bakarapp.ChatService.ChatService" 
 			android:label="Chat Service">
 			  <intent-filter>
-				<action android:name="com.BhakBhosdi.ChatService.ChatService"></action>
+				<action android:name="com.bakarapp.ChatService.ChatService"></action>
 			</intent-filter>
 		</service>
       
              
         <activity
-        android:name="com.BhakBhosdi.Activities.LoginActivity" 
+        android:name="com.bakarapp.Activities.LoginActivity" 
         android:theme="@android:style/Theme.NoTitleBar" 
+        android:screenOrientation="portrait"
+        >
+    	</activity>
+    	
+         <activity
+        android:name="com.bakarapp.Activities.MyBeepsActivity" 
+        android:theme="@android:style/Theme.NoTitleBar" 
+        android:screenOrientation="portrait"
         >
     	</activity>
         
         <activity
-            android:name="com.BhakBhosdi.Activities.BhakBhosdiActivity" 
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:name="com.bakarapp.Activities.BhakBhosdiActivity" 
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:screenOrientation="portrait" >
               <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -46,24 +56,24 @@
         </activity>   
         
         <provider
-           android:name="com.BhakBhosdi.provider.HistoryContentProvider"
-           android:authorities="com.BhakBhosdi.provider.HistoryContentProvider" />
+           android:name="com.bakarapp.provider.HistoryContentProvider"
+           android:authorities="com.bakarapp.provider.HistoryContentProvider" />
 
        <provider
-               android:name="com.BhakBhosdi.provider.BlockedUsersProvider"
-               android:authorities="com.BhakBhosdi.provider.BlockedUsersProvider" />
+               android:name="com.bakarapp.provider.BlockedUsersProvider"
+               android:authorities="com.bakarapp.provider.BlockedUsersProvider" />
 
        <provider
-               android:name="com.BhakBhosdi.provider.ChatHistoryProvider"
-               android:authorities="com.BhakBhosdi.provider.ChatHistoryProvider" />
+               android:name="com.bakarapp.provider.ChatHistoryProvider"
+               android:authorities="com.bakarapp.provider.ChatHistoryProvider" />
 
        <provider
-               android:name="com.BhakBhosdi.provider.ActiveChatProvider"
-               android:authorities="com.BhakBhosdi.provider.ActiveChatProvider" />
+               android:name="com.bakarapp.provider.ActiveChatProvider"
+               android:authorities="com.bakarapp.provider.ActiveChatProvider" />
 
        <provider
-                android:name="com.BhakBhosdi.provider.EventsLoggingProvider"
-                android:authorities="com.BhakBhosdi.provider.EventsLoggingProvider" />
+                android:name="com.bakarapp.provider.EventsLoggingProvider"
+                android:authorities="com.bakarapp.provider.EventsLoggingProvider" />
         
         
     </application>

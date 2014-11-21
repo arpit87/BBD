@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/very_light_gray"
+        android:background="@color/white"
         android:gravity="center_horizontal">
       
     <ImageView android:layout_width="match_parent"
@@ -16,30 +16,30 @@
         android:id="@+id/settings_thumbnail"/>
 
     <TextView
-            android:id="@+id/settings_bbspin"
+            android:id="@+id/settings_bba_pin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="2.0dip"
             android:paddingTop="2.0dip"
-            android:text="BBS Pin 2657"
+            android:text="BBA Pin 2657"
             android:textColor="@color/black"
             android:textSize="20dip"
-            android:textStyle="bold"
+          
             android:gravity="center"
             android:layout_below="@id/settings_thumbnail"/>
     
-    <ImageButton android:id="@+id/settings_sharebbspin"
+    <ImageButton android:id="@+id/settings_sharetbbapin"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_alignBottom="@id/settings_bbspin"
+           android:layout_alignBottom="@id/settings_bba_pin"
            android:layout_alignParentRight="true"
-           android:src="@drawable/ic_action_share"
-           android:background="@android:color/transparent"/>
+          
+           android:background="@drawable/borderless_share_button"/>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/settings_bbspin"
+            android:layout_below="@id/settings_bba_pin"
             android:layout_marginLeft="5dip"
             android:layout_marginRight="5dip"
             android:layout_marginBottom="2dip"
@@ -64,7 +64,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:clickable="true"
-                        android:background="@drawable/borderless_button">
+                        android:background="@drawable/borderless_button"
+                        android:paddingBottom="2dip">
   					<TextView
                             android:id="@+id/settings_notification_header"
                             android:layout_width="wrap_content"
@@ -90,8 +91,7 @@
                    <View
                         android:layout_width="match_parent"
                         android:layout_height="1dip"
-                        android:background="@color/gray"
-                        android:layout_marginTop="2dip"
+                        android:background="@color/gray"                        
                         android:layout_marginLeft="5dip"/>
                 
                 <LinearLayout
@@ -100,7 +100,8 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:clickable="true"
-                        android:background="@drawable/borderless_button">
+                        android:background="@drawable/borderless_button"
+                        android:paddingBottom="2dip">
   					<TextView
                             android:id="@+id/settings_sounds_header"
                             android:layout_width="wrap_content"
@@ -123,7 +124,47 @@
 
                 </LinearLayout>
                 
-                   <View
+                <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dip"
+                        android:background="@color/gray"
+                        
+                        android:layout_marginLeft="5dip"/>
+                       
+                <LinearLayout
+                        android:id="@+id/settings_level_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:clickable="true"
+                        android:background="@drawable/borderless_button"
+                        android:paddingBottom="2dip">
+
+                    <TextView
+                            android:id="@+id/settings_level_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="20dip"
+                            android:text="Level"
+                            android:layout_marginTop="10dip"
+                            android:layout_marginLeft="5dip"
+                            />
+
+                    <TextView
+                            android:id="@+id/settings_level_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/gray"
+                            android:textSize="15dip"
+                            android:text="3"
+                            android:layout_marginLeft="5dip"
+                            android:layout_marginBottom="10dip"/>
+
+                </LinearLayout>
+                
+                
+              <!--      <View
                         android:layout_width="match_parent"
                         android:layout_height="1dip"
                         android:background="@color/gray"
@@ -159,13 +200,13 @@
                             android:layout_marginLeft="5dip"
                             android:layout_marginBottom="10dip"/>
 
-                </LinearLayout>
+                </LinearLayout>--> 
 
                 <View
                         android:layout_width="match_parent"
                         android:layout_height="1dip"
                         android:background="@color/gray"
-                        android:layout_marginTop="2dip"
+                       
                         android:layout_marginLeft="5dip"/>
                 
                 

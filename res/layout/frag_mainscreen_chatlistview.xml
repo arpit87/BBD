@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
+    android:background="@color/white"
     android:padding="2dip">
  <!--     <TextView
         android:id="@+id/frag_mainscreen_chatlistempty"
@@ -21,9 +22,10 @@
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
               android:background="@color/white"
-              android:cacheColorHint="@android:color/transparent"
+              android:cacheColorHint="@color/white"
               android:divider="@color/very_light_gray"
               android:dividerHeight="1dip"
+              
               />
     
      <FrameLayout

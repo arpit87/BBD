@@ -15,10 +15,10 @@
         <ImageButton android:id="@+id/mainscreen_bdd"
             android:layout_width="0dip"
             android:layout_weight="1" android:layout_height="60dip"            
-            android:paddingTop="15dip"
-            android:paddingBottom="15dip"
+            android:paddingTop="10dip"
+            android:paddingBottom="10dip"
             android:background="@drawable/tab_selector"  
-            android:src="@drawable/ic_finger_white_solid"
+            android:src="@drawable/new_bbd_white"
              android:scaleType="fitCenter"         
        >
         </ImageButton>

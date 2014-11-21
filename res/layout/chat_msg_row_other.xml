@@ -1,52 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"	
-	android:layout_height="wrap_content"
-	android:layout_width="fill_parent"
-	android:id="@+id/relativelayout_chatmsgrow"	
-	android:paddingTop="3dip"
-	android:paddingBottom="3dip">
-	
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     
-    <LinearLayout
-         android:id="@+id/chatmessageViewGroup"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"         
-         android:layout_toRightOf="@id/chat_msg_pic"
-         android:background="@drawable/chat_msg_frame_other2"
-         android:gravity="left"
-         android:orientation="vertical" >
+    android:layout_marginTop="10dip"
+    android:layout_marginBottom="10dip"
+    >
+ <LinearLayout
+     android:id="@+id/chat_msg_row_llayout" 
+     android:layout_height="wrap_content"
+     android:layout_width="wrap_content"
+     android:orientation="horizontal"
+    android:gravity="center" 
+    android:background="@drawable/chat_frame_other"
+    android:layout_alignParentLeft="true"
+    android:padding="10dip"
+     >   
   
-	<TextView android:id="@+id/chatmessagetext"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"		
-		android:autoLink="all"
-		android:text="chat message is this" 
-		android:layout_marginLeft="10dip"
-		android:layout_marginRight="12dip"
-		android:textColor="@color/black"/>
-	<TextView android:id="@+id/chatmessagestatusandtime"
-		android:layout_width="wrap_content" android:layout_height="wrap_content"		
-		android:autoLink="none"
-		android:text="Sending.."
-		android:layout_marginLeft="10dip"
-		android:layout_marginRight="12dip"
-		android:textColor="@color/gray" 
-		android:layout_gravity="right"
-		android:textSize="10dip"
-		/>	
-	</LinearLayout> 
-	
-   
-
      <ImageView
-            android:id="@+id/chat_msg_pic"
-            android:layout_width="50.0dip"
-            android:layout_height="50.0dip" 
-            android:layout_marginBottom="1dip"  
-            android:layout_marginLeft="1dip"          
-            android:scaleType="centerCrop" 
-            android:layout_alignBottom="@id/chatmessageViewGroup"/>
-
+    android:id="@+id/chat_msg_row_img" 
+    android:layout_width="100dip"
+    android:layout_height="100dip" 
     
+    android:src="@drawable/loading"
+    android:padding="10dip"
+    android:scaleType="fitCenter"
     
+    />   
+    
+     
+     <TextView 
+    android:id="@+id/chat_msg_row_text"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"   
+    android:text="Bhak  asdfsf  "
+    android:padding="20dip"
+    android:maxWidth="180dip"
+    android:textSize="20sp"
+    android:typeface="serif"
+    android:textStyle="bold"
+    android:gravity="center"
+    
+   />
+     
+</LinearLayout>	
+<TextView
+    android:id="@+id/chat_msg_row_statusandtime"
+	android:layout_width="wrap_content" android:layout_height="wrap_content"		
+	android:autoLink="none"
+	android:text="Sending.."		
+	android:textColor="@color/gray" 
+	android:gravity="right"
+	android:textSize="10sp"
+	android:layout_marginLeft="5dip"
+	android:layout_alignParentLeft="true"
+	android:layout_below="@id/chat_msg_row_llayout"/>		
 </RelativeLayout>
-

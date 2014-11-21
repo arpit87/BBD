@@ -2,31 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" 
-android:background="@drawable/transparent_black"
+android:background="@drawable/red_layout_gradient"
 android:orientation="vertical">
 <RelativeLayout android:layout_height="wrap_content"
     android:layout_width="match_parent">
     <HorizontalScrollView
         android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical" >
         <LinearLayout android:layout_width="match_parent"
-            android:layout_height="30dip"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/choosebeep_beeprow1"></LinearLayout>
         
         <LinearLayout android:layout_width="match_parent"
-            android:layout_height="30dip"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:id="@+id/choosebeep_beeprow2"></LinearLayout>
         
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="30dip"
+      <!--   <LinearLayout android:layout_width="match_parent"
+            android:layout_height="35dip"
             android:orientation="horizontal"
-            android:id="@+id/choosebeep_beeprow3"></LinearLayout>
+            android:id="@+id/choosebeep_beeprow3"></LinearLayout>  -->
                
         
     </LinearLayout>
@@ -43,37 +44,62 @@ android:orientation="vertical">
 
 
 <LinearLayout android:layout_width="match_parent"
-            android:layout_height="40px"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:id="@+id/choosebeep_iconbar">
+            android:id="@+id/choosebeep_iconbar"
+            android:layout_marginTop="5dip"
+            >
     
     <ImageButton
+        android:id="@+id/choosebeep_fav_button"
         android:layout_width="0dip"
         android:layout_height="35dip"
         android:layout_weight="1"
-        android:src="@drawable/ic_action_important" 
-        android:scaleType="fitCenter"/>
+        android:src="@drawable/ic_fac" 
+        android:scaleType="fitCenter"
+        android:background="@drawable/white_bordered_button_transwhite"
+        android:layout_marginLeft="5dip"
+         android:layout_marginRight="5dip"
+          android:padding="5dip"
+         />
     
     <ImageButton
+        android:id="@+id/choosebeep_back_button"
         android:layout_width="0dip"
         android:layout_height="35dip"
         android:layout_weight="1"
         android:src="@drawable/ic_action_back"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter" 
+        android:background="@drawable/white_bordered_button_transwhite"
+        android:layout_marginLeft="5dip"
+         android:layout_marginRight="5dip"
+          android:padding="5dip"/>
      
     <ImageButton
+        android:id="@+id/choosebeep_forward_button"
         android:layout_width="0dip"
         android:layout_height="35dip"
         android:layout_weight="1"
         android:src="@drawable/ic_action_forward"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter" 
+        android:background="@drawable/white_bordered_button_transwhite"
+        android:layout_marginLeft="5dip"
+         android:layout_marginRight="5dip"
+          android:padding="5dip"
+         />
      
     <ImageButton
+        android:id="@+id/choosebeep_refresh_button"
         android:layout_width="0dip"
         android:layout_height="35dip"
         android:layout_weight="1"
         android:src="@drawable/ic_action_refresh"
-        android:scaleType="fitCenter" />
+        android:scaleType="fitCenter"
+        android:background="@drawable/white_bordered_button_transwhite"
+        android:layout_marginLeft="5dip"
+         android:layout_marginRight="5dip"
+         android:padding="5dip"
+        />
     
         </LinearLayout>        
 

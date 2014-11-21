@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" 
-    android:background="@drawable/gradient_light_brown">
+    android:background="@drawable/red_layout_gradient">
     
     <ImageView android:layout_width="match_parent"
         android:layout_height="0dip"
-        android:layout_weight="6"
-        android:src="@drawable/bbdlogo_brwn"
+        android:layout_weight="4"
+        android:src="@drawable/loginscreen"
         android:scaleType="fitCenter"
         android:paddingTop="40dip"
         android:paddingLeft="40dip"
@@ -28,32 +28,33 @@
     <EditText 
         android:id="@+id/login_nickname"
         android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight=".7"
+        android:layout_height="wrap_content"
+        
         android:textSize="20dip"
-        android:textColorHint="@color/black"
+        android:textColorHint="@color/off_white"
         android:hint="nick...."
         android:layout_gravity="center_horizontal"
         android:gravity="left"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:layout_marginRight="50dip"
         android:layout_marginLeft="50dip"
+        android:background="@drawable/edittext_background"
         />
     <Button
         android:id="@+id/login_startbutton" 
         android:layout_width="wrap_content"
-        android:layout_height="0dip"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
+      
         android:layout_marginTop="10dip"
-        android:text="Start Bakchodi"
+        android:text="Start Bakar"
         android:textStyle="bold"
         android:layout_gravity="center"
-        android:textColor="@color/very_light_brown"
-        android:background="@color/very_dark_brown"
+        android:textColor="@color/white"
+        android:background="@drawable/beep_button"
         android:paddingLeft="30dip"
         android:paddingRight="30dip"/>
     <View android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight=".7"
+        android:layout_height="30dip"
+        
         android:background="@android:color/transparent"/>
 </LinearLayout>

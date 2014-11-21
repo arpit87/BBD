@@ -5,5 +5,192 @@
     android:orientation="vertical"
     android:background="@color/white" >
     
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="40dip"
+    android:orientation="horizontal"
+    android:layout_marginTop="12dip">
+    <View android:layout_height="match_parent"
+        android:layout_width="0dip"
+        android:layout_weight=".11"/>
+ <ToggleButton
+     android:id="@+id/trend_daily_button" 
+     android:layout_height="match_parent"
+     android:layout_width="0dip"
+     android:layout_weight=".26"
+     android:background="@drawable/bordered_button_transgray"
+     android:text="Daily"
+     android:textStyle="italic"
+     android:textOn="Daily"
+     android:textOff="Daily"
+    
+     />
+ <ToggleButton
+     android:id="@+id/trend_weekly_button"
+      android:layout_height="match_parent"
+     android:layout_width="0dip"
+     android:layout_weight=".26"
+     android:background="@drawable/bordered_button_transgray"
+     android:text="Weekly"
+     android:textStyle="italic"
+     android:textOn="Weekly"
+     android:textOff="Weekly"
+   
+     />
+  
+     <ToggleButton 
+     android:id="@+id/trend_monthly_button"
+     android:layout_height="match_parent"
+     android:layout_width="0dip"
+     android:layout_weight=".26"
+     android:background="@drawable/bordered_button_transgray"
+     android:text="Monthly"
+     android:textStyle="italic"
+     android:textOn="Monthly"
+     android:textOff="Monthly"
+     
+     />
+     
+    <View android:layout_height="match_parent"
+        android:layout_width="0dip"
+        android:layout_weight=".11"/>     
+</LinearLayout>
+<LinearLayout android:layout_height="60dip"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:layout_marginTop="5dip">
+      <View android:layout_height="match_parent"
+        android:layout_width="0dip"
+        android:layout_weight=".11"/>
+<RelativeLayout android:layout_width="0dip"
+    android:layout_height="match_parent"
+    android:layout_weight=".39">
+    <TextView
+       android:id="@+id/trend_numnewbeeps" 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="---"
+       android:textSize="30sp"       
+       android:layout_alignParentBottom="true"
+       android:layout_alignParentLeft="true"
+       android:textColor="@color/blue"
+       android:padding="0dip"
+       android:layout_margin="0dip"/>
+   
+   <TextView
+       android:id="@+id/trend_newbeeps_newlabel" 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="New"
+       android:textSize="20sp"
+       
+       /> 
+   <TextView       
+       android:id="@+id/trend_beeps_str"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="  beeps"
+       android:textSize="10sp"
+       android:layout_toRightOf="@id/trend_numnewbeeps"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="3dip"/> 
+</RelativeLayout>
+<RelativeLayout android:layout_width="0dip"
+    android:layout_height="match_parent"
+    android:layout_weight=".39">
+   <TextView       
+       android:id="@+id/trend_totalrebeeps_label"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="  rebeeps"
+       android:textSize="10sp"
+       android:layout_alignParentRight="true"
+       android:layout_alignParentBottom="true"
+       android:paddingBottom="3dip"/>
+   <TextView
+       android:id="@+id/trend_numtotalbeeps" 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="---"
+       android:textSize="30sp"       
+       android:layout_toLeftOf="@id/trend_totalrebeeps_label"
+       android:layout_alignParentBottom="true"
+       android:textColor="@color/green"/>
+    
+   <TextView
+       android:id="@+id/trend_newbeeps_totallabel" 
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:text="Total"      
+       android:textSize="20sp"       
+       android:layout_alignLeft="@+id/trend_numtotalbeeps"/> 
+   
+</RelativeLayout>
+  <View android:layout_height="match_parent"
+        android:layout_width="0dip"
+        android:layout_weight=".11"/>
+</LinearLayout>
 
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/transparent_black"
+    android:layout_marginTop="5dip">
+  <View android:id="@+id/trend_strut"
+        android:layout_width="0dp"
+        android:layout_height="0dp" 
+        android:layout_centerHorizontal="true"/>
+    <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="#10"
+        android:textSize="25sp"
+        android:layout_toLeftOf="@id/trend_strut"
+        android:textColor="@color/beep_yellow"
+        android:paddingRight="20dip"/>
+    <TextView
+        android:id="@+id/trend_top20_label" 
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="Top 10"
+        android:layout_toRightOf="@id/trend_strut"
+        android:textSize="15sp"
+        android:textColor="@color/white"/>
+    
+      <TextView android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="is any of yours trending??"
+        android:layout_toRightOf="@id/trend_strut"
+        android:layout_below="@id/trend_top20_label"
+        android:textSize="10sp"
+        android:textColor="@color/white"/>
+</RelativeLayout>
+<ProgressBar
+    android:id="@+id/trend_progress" 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:layout_gravity="center"
+    android:indeterminate="true"/>
+<ListView
+    android:id="@+id/trend_listview" 
+    android:layout_width="match_parent"
+    android:layout_height="0dip"
+    android:layout_weight="1"
+    android:visibility="gone"
+    android:divider="@android:color/transparent"
+    >
+    
+</ListView>
+<View android:layout_width="match_parent"
+    android:layout_height="1dip"
+    android:background="@color/gray"/>
+<TextView
+    android:id="@+id/trend_showmybeep"
+     android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Show my beeps"
+    android:textColor="@color/gray"
+    android:textSize="14sp"
+    android:gravity="center"
+    android:background="@drawable/borderless_button_gray_darkgray"
+    android:padding="2dip"
+    android:layout_weight="0"/>
 </LinearLayout>

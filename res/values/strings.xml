@@ -1,9 +1,10 @@
 <resources>
-
-    <string name="app_name">BBD</string>
-    <string name="crash_toast_text">oyy teri , kuch phata</string>
-    <string name="dev_bbd_id">786</string>
-    <string name="dev_nick">chutzpa</string>
-    <string name="dev_first_msg">BAPP pin share karo, friends ko add karo and beep karo.</string>
-
+    <string name="app_name">BakarApp</string>
+    <string name="crash_toast_text">Oyy teri, kuch phata</string>
+    <string name="dev_bbd_id">1001</string>
+    <string name="dev_nick">Dude Developer</string>
+    <string name="dev_first_msg">BA pin share karo, friends ko add karo and beep karo.</string>
+    <string name="dev_first_msg_img">trollface12</string>
+    <string name="friend_first_msg_img">trollface15</string>
+    <string name="friend_first_msg">Bakar chalu..</string>
 </resources>

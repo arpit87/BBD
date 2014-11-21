@@ -12,4 +12,11 @@
     <color name="very_dark_brown">#ff513a32</color>
     <color name="very_light_brown">#ffeee4b1</color>
     <color name="very_dark_gray">#ff494949</color>
+    <color name="blue">#ff0080c0</color>
+    <color name="green">#ff3ab031</color>
+    <color name="dark_gray">#808080</color>
+    <color name="light_gray">#33636363</color>
+    <color name="red">#fffa1f15</color>
+    <color name="transparent_black">#aa000000</color>
+    <color name="transwhite">#aaffffff</color>
 </resources>
