@@ -1,6 +1,7 @@
 package com.bakarapp.HelperClasses;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -10,7 +11,7 @@ import org.json.JSONObject;
 public class BeepList {
  
 static BeepList instance = null;
-ArrayList<ArrayList <Beep>> listOfbeepList =  new ArrayList <ArrayList <Beep>>();
+ArrayList <ArrayList <Beep>> listOfbeepList =  new ArrayList <ArrayList <Beep>>();
 ArrayList <Beep> myBeepList = new ArrayList<Beep>();
 ArrayList <Beep> dailyTrendBeepList = new ArrayList<Beep>();
 ArrayList <Beep> weeklyTrendBeepList = new ArrayList<Beep>();
@@ -23,7 +24,20 @@ int newMonthlyBeeps = 0;
 int totalMonthlyBeeps = 0;
 
 private BeepList()
-{}
+{
+
+	ArrayList<Beep> beepList1 = new ArrayList<Beep>();
+	ArrayList<Beep> beepList2 = new ArrayList<Beep>();
+	ArrayList<Beep> beepList3 = new ArrayList<Beep>();
+	ArrayList<Beep> beepList4 = new ArrayList<Beep>();
+	ArrayList<Beep> beepList5 = new ArrayList<Beep>();
+	
+	listOfbeepList.add(beepList1);
+	listOfbeepList.add(beepList2);
+	listOfbeepList.add(beepList3);
+	listOfbeepList.add(beepList4);
+	listOfbeepList.add(beepList5);
+}
 
 public static BeepList getInstance()
 { 
@@ -54,7 +68,7 @@ public List<Beep> getFirstBeepList()
 public List<Beep> getBeepListAt(int index)
 {
 	if(index >= listOfbeepList.size() || index < 0)
-		return null;
+		return new ArrayList<Beep>();
 	else
 		return listOfbeepList.get(index);
 }
@@ -187,7 +201,8 @@ public void updateTrendBeepList(JSONArray beeps,int trend_type,int newBeepNum, i
 }
 
 public void updateBeepList(JSONArray beeps){
-	ArrayList<Beep> beepList = new ArrayList<Beep>();
+	
+	
 	try {			
 					
 		//JSONArray beeps = beepListJSON.getJSONArray("BeepList");
@@ -197,14 +212,14 @@ public void updateBeepList(JSONArray beeps){
 			JSONObject thisBeep=beeps.getJSONObject(i);
 			//if (Platform.getInstance().isLoggingEnabled()) Log.d("json",thisOtherUser.toString());
 			Beep b = new Beep(thisBeep);
-			beepList.add((b));				
+			listOfbeepList.get(b.getBeepLevel()-1).add(b);					
 		}
 		
 	} catch (JSONException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	}
-	listOfbeepList.add(beepList);
+		
 	
 }
 

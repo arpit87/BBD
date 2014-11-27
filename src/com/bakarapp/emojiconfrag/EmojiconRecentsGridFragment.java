@@ -1,4 +1,4 @@
-package com.bakarapp.emojicon;
+package com.bakarapp.emojiconfrag;
 
 import android.content.Context;
 import android.os.Bundle;

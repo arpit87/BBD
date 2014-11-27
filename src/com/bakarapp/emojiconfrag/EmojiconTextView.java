@@ -1,5 +1,5 @@
 
-package com.bakarapp.emojicon;
+package com.bakarapp.emojiconfrag;
 
 import android.content.Context;
 import android.content.res.TypedArray;

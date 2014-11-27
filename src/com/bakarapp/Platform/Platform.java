@@ -22,7 +22,7 @@ public class Platform {
 	private static Platform instance = null;
 	private Context context;	
 	private Handler handler;
-	private boolean ENABLE_LOGGING = true;
+	private boolean ENABLE_LOGGING = false;
 	
 		
 	private Platform() {

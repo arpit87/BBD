@@ -18,6 +18,7 @@ import com.bakarapp.R;
 import com.bakarapp.HTTPServer.ServerConstants;
 import com.bakarapp.HelperClasses.SBImageLoader;
 import com.bakarapp.HelperClasses.ThisUserConfig;
+import com.bakarapp.Util.StringUtils;
 
 
 
@@ -138,22 +139,36 @@ public class ChatListViewAdapter extends BaseAdapter {
 	    	    
 	    if(msg.getInitiator().equalsIgnoreCase(selfBBDId))
 	    {	   		
-	    	
-	    	 chatRowView = inflater.inflate(R.layout.chat_msg_row_my, null);
-	    	 imgURL = ServerConstants.TROLLIMGLOC+"my/"+msg.getImageUrl();
+	    	 imgURL = msg.getImageUrl();
+	    	 if(StringUtils.isBlank(imgURL))
+	    		 chatRowView = inflater.inflate(R.layout.chat_msg_row_my, null);
+	    	 else
+	    	 {
+	    		chatRowView = inflater.inflate(R.layout.beep_msg_row_my, null);
+	    	 	imgURL = ServerConstants.TROLLIMGLOC+"my/"+imgURL;
+	    	 }
 	    	// if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"self msg"+msg.getMessage());
 	    }
 	    else
 	    {	
-	    	chatRowView = inflater.inflate(R.layout.chat_msg_row_other, null); 
-	    	imgURL = ServerConstants.TROLLIMGLOC+"other/"+msg.getImageUrl();
+	    	 imgURL = msg.getImageUrl();
+	    	 if(StringUtils.isBlank(imgURL))
+	    		 chatRowView = inflater.inflate(R.layout.chat_msg_row_other, null);
+	    	 else
+	    	 {
+	    		 chatRowView = inflater.inflate(R.layout.beep_msg_row_other, null); 
+	    		 imgURL = ServerConstants.TROLLIMGLOC+"other/"+msg.getImageUrl();
+	    	 }
 	 	    // if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"othr person msg"+msg.getMessage());
 	    }  
 	  
     	msgText = (TextView) chatRowView.findViewById(R.id.chat_msg_row_text);
     	msgStatus = (TextView) chatRowView.findViewById(R.id.chat_msg_row_statusandtime);
-    	imgView = (ImageView) chatRowView.findViewById(R.id.chat_msg_row_img);
-    	SBImageLoader.getInstance().displayImageElseStub(imgURL, imgView, R.drawable.loading);
+    	if(!StringUtils.isBlank(imgURL))
+    	{
+    		imgView = (ImageView) chatRowView.findViewById(R.id.chat_msg_row_img);
+    		SBImageLoader.getInstance().displayImageElseStub(imgURL, imgView, R.drawable.loading);
+    	}
 	    msgText.setText(msg.getMessage());
 	    
 	    if (msg.getTimestamp() != null) {

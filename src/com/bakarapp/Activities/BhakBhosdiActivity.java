@@ -16,7 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -28,7 +27,7 @@ import com.bakarapp.R;
 import com.bakarapp.ChatService.ChatService;
 import com.bakarapp.ChatService.IChatManager;
 import com.bakarapp.ChatService.IXMPPAPIs;
-import com.bakarapp.Fragments.ChatContainerFrag;
+import com.bakarapp.Fragments.ChatListFragment1;
 import com.bakarapp.Fragments.SettingsFragment;
 import com.bakarapp.Fragments.TrendFragment;
 import com.bakarapp.HelperClasses.ThisAppConfig;
@@ -47,16 +46,11 @@ public class BhakBhosdiActivity extends FragmentActivity{
     private ImageButton button1;
     private ImageButton button2;
     private ImageButton button3;
-    
-    private IXMPPAPIs xmppApis = null;
-    IChatManager chatManager = null;    
+  
+     
        
-    private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
    
-    private boolean mBinded = false;
-    private String mThiUserChatUserName = "";
-    private String mThisUserChatPassword = "";
-    ChatContainerFrag bbdFrag ;
+    ChatListFragment1 bbdFrag ;
 	Fragment trendsFrag ;
 	Fragment settingsFrag ;
     
@@ -69,7 +63,9 @@ public class BhakBhosdiActivity extends FragmentActivity{
         {
         	firstRun();
         	return;
-        }           
+        }     
+        
+        initializeChatListView();
 
     }
     
@@ -78,7 +74,7 @@ public class BhakBhosdiActivity extends FragmentActivity{
     	Logger.i(TAG, "first run") ;
  		String uuid = ThisAppInstallation.id(this.getBaseContext());
  		ThisAppConfig.getInstance().putString(ThisAppConfig.APPUUID,uuid);  
- 		ThisUserConfig.getInstance().putInt(ThisUserConfig.LEVEL, 3);
+ 		ThisUserConfig.getInstance().putInt(ThisUserConfig.LEVEL, 4);
  		ThisAppConfig.getInstance().putInt(ThisAppConfig.NOTIFICATION_SETTINGS,1);
  		ThisAppConfig.getInstance().putInt(ThisAppConfig.SOUND_SETTINGS,1);
     	String deviceId = Secure.getString(this.getContentResolver(),Secure.ANDROID_ID);
@@ -185,7 +181,7 @@ public class BhakBhosdiActivity extends FragmentActivity{
     
     private List<Fragment> getFragments() {
 		List<Fragment> frag_list= new ArrayList<Fragment>(); 
-		bbdFrag = new ChatContainerFrag();
+		bbdFrag = new ChatListFragment1();
 		trendsFrag = new TrendFragment();
 		settingsFrag = new SettingsFragment();		
 		frag_list.add(bbdFrag);
@@ -198,20 +194,13 @@ public class BhakBhosdiActivity extends FragmentActivity{
     @Override
     public void onResume() {
     	super.onResume();
-    	if(!mBinded)
-    		bindToService();
     }
     
     @Override
     public void onDestroy() {
     	
     	super.onDestroy();
-    	if (mBinded) {
-    		releaseService();
-    	    mBinded = false;
-    	}
-    	xmppApis = null;	
-     	chatManager = null;
+    	
     }   
     
     
@@ -221,7 +210,7 @@ public class BhakBhosdiActivity extends FragmentActivity{
         if (mPager.getCurrentItem() == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
             // Back button. This calls finish() on this activity and pops the back stack.
-            bbdFrag.handleBack();            
+         super.onBackPressed();               
             
         } else {
             // Otherwise, select the previous step.
@@ -251,85 +240,6 @@ public class BhakBhosdiActivity extends FragmentActivity{
     	}
     
     	}
- 
- 
- /////////////Chat related methods
- public IChatManager getChatManager()
- { 
-	if(chatManager == null)
-	{
-	   try {
-		  if(xmppApis != null) 
-			  chatManager = xmppApis.getChatManager();
-		  else if(!mBinded)
-			  bindToService();
-	} catch (RemoteException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	}
-    
-   return chatManager;
- }
- 
- private void bindToService() {
-         if (Platform.getInstance().isLoggingEnabled()) Log.d( TAG, "binding chat to service" );        
-     	
-        Intent i = new Intent(getApplicationContext(),ChatService.class);
-       
-        getApplicationContext().bindService(i, mChatServiceConnection, BIND_AUTO_CREATE);	  
-        
-     
-  }
- 
-	    
-	private void releaseService() {
-		if(mChatServiceConnection != null) {
-			getApplicationContext().unbindService(mChatServiceConnection);
-			mBinded = false;
-			if (Platform.getInstance().isLoggingEnabled()) Log.d( TAG, "chat Service released from chatwindow" );
-		} else {
-			//ToastTracker.showToast("Cannot unbind - service not bound", Toast.LENGTH_SHORT);
-		}
-	}
-
-	
-    private final class ChatServiceConnection implements ServiceConnection{
-    	
-    	@Override
-    	public void onServiceConnected(ComponentName className, IBinder boundService) {
-    		//ToastTracker.showToast("onServiceConnected called", Toast.LENGTH_SHORT);
-    		if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"onServiceConnected called");
-    		xmppApis = IXMPPAPIs.Stub.asInterface((IBinder)boundService);
-    		try {
-				chatManager = xmppApis.getChatManager();
-			} catch (RemoteException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-    		try {
-    	        mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
-    	        mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
-				xmppApis.loginAsync(mThiUserChatUserName, mThisUserChatPassword);
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-    		mBinded = true;
-    		initializeChatListView();    	
-    		if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"service connected");
-    	}
-
-    	@Override
-    	public void onServiceDisconnected(ComponentName arg0) {
-    		//ToastTracker.showToast("onService disconnected", Toast.LENGTH_SHORT);
-    		xmppApis = null;   		
-    	    
-    		if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"service disconnected");
-    	}
-
-    }	
-	
-	
  
  
 }

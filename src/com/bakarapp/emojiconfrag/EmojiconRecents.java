@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.bakarapp.emojicon;
+package com.bakarapp.emojiconfrag;
 
 import com.bakarapp.emojicon.emoji.Emojicon;
 

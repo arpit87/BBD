@@ -24,7 +24,7 @@ import android.app.Application;
 import com.bakarapp.Util.Logger;
 //dENjUFQ3U2U4TTZTYkthRndSYjF1U0E6MA
 @ReportsCrashes(formKey = "" ,
-mailTo="arpit87@gmail.com",
+//mailTo="arpit87@gmail.com",
 //customReportContent = {APP_VERSION_NAME,
 //		APP_VERSION_CODE,  PACKAGE_NAME,PHONE_MODEL,BRAND, ANDROID_VERSION,
 //		TOTAL_MEM_SIZE, AVAILABLE_MEM_SIZE ,CUSTOM_DATA, STACK_TRACE,

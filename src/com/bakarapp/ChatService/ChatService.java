@@ -8,7 +8,6 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionConfiguration.SecurityMode;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.Roster.SubscriptionMode;
-import org.jivesoftware.smack.SASLAuthentication;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException.NotConnectedException;
@@ -37,7 +36,6 @@ import android.widget.Toast;
 
 import com.bakarapp.R;
 import com.bakarapp.Activities.BhakBhosdiActivity;
-import com.bakarapp.Fragments.ChatWindowFrag;
 import com.bakarapp.HelperClasses.ActiveChat;
 import com.bakarapp.HelperClasses.SBConnectivity;
 import com.bakarapp.HelperClasses.ThisAppConfig;
@@ -177,7 +175,7 @@ public class ChatService extends Service {
     	Uri sound_uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     	NotificationCompat.Builder mBuilder =
     	        new NotificationCompat.Builder(this)
-    	        .setSmallIcon(R.drawable.ic_finger_white_solid)
+    	        .setSmallIcon(R.drawable.show_beep_icon1_white)
     	        .setContentTitle(participant_name)
     	        .setContentText(chatMessage)    	        
     	        .setLights(0xff0000ff, 1000, 1000)

@@ -9,20 +9,18 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
-import android.os.ResultReceiver;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 
 import com.bakarapp.R;
 import com.bakarapp.Activities.BhakBhosdiActivity;
@@ -41,17 +39,13 @@ import com.bakarapp.Platform.Platform;
 import com.bakarapp.Util.BBDTracker;
 import com.bakarapp.Util.Logger;
 import com.bakarapp.Util.StringUtils;
-import com.bakarapp.beeppopup.BeepsGridViewLayout.OnBeepClickedListener;
-import com.bakarapp.beeppopup.BeepsPopup;
 import com.bakarapp.emojicon.emoji.Emojicon;
-import com.bakarapp.emojiconpopup.EmojiconEditText;
-import com.bakarapp.emojiconpopup.EmojiconGridView.OnEmojiClickedListener;
-import com.bakarapp.emojiconpopup.EmojiconsPopup;
-import com.bakarapp.emojiconpopup.EmojiconsPopup.OnEmojiconBackspaceClickedListener;
-import com.bakarapp.emojiconpopup.EmojiconsPopup.OnSoftKeyboardOpenCloseListener;
+import com.bakarapp.emojiconfrag.EmojiconEditText;
+import com.bakarapp.emojiconfrag.EmojiconGridFragment;
+import com.bakarapp.emojiconfrag.EmojiconsFragment;
 
 
-public class ChatWindowFrag extends Fragment {
+public class ChatWindowFrag2 extends Fragment implements EmojiconGridFragment.OnEmojiconClickedListener, EmojiconsFragment.OnEmojiconBackspaceClickedListener{
 	
 	private static String TAG = "com.bakarapp.ChatClient.ChatWindow";
 	public static String PARTICIPANT = "participant";
@@ -61,7 +55,6 @@ public class ChatWindowFrag extends Fragment {
     private ListView mMessagesListView;
     private ImageButton chooseBeepButton;
     private ImageButton showEmojiButton;
-    private ImageButton showKeyboardButton;
     
     private Menu mMenu;
     private IChatAdapter chatAdapter;
@@ -80,15 +73,12 @@ public class ChatWindowFrag extends Fragment {
     //private String mThisUserChatNickName =  "";
 	private NotificationManager notificationManager;
     private boolean mFBLoggedIn = false;
-    //private ChooseBeepFragment chooseBeepFrag;
-    //EmojiconsFragment emojiFrag;
-    EmojiconsPopup emojipopup ;
-    BeepsPopup beeppopup ;
+    private ChooseBeepFragment chooseBeepFrag;
+    EmojiconsFragment emojiFrag;
     EmojiconEditText chatInputEditText;
     View chatFrag = null;
-    boolean iskeyboardopen = false;
-    OnBeepClickedListener mBeepClickListener;
-   
+    
+    FragmentManager fm;
        
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -96,7 +86,7 @@ public class ChatWindowFrag extends Fragment {
         mMessagesListAdapter = new ChatListViewAdapter(getActivity());
         notificationManager =  (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
         mMyNickName = ThisUserConfig.getInstance().getString(ThisUserConfig.MYNICK);
-        
+        fm= getChildFragmentManager();
  }
     
     
@@ -114,46 +104,13 @@ public class ChatWindowFrag extends Fragment {
 			if(parent!=null)
 				parent.removeView(chatFrag);
 		}
-		//chooseBeepFrag = new ChooseBeepFragment();  
-		//emojiFrag = new EmojiconsFragment();
-		emojipopup = new EmojiconsPopup(chatFrag, getActivity());
-		beeppopup = new BeepsPopup(chatFrag, getActivity());
-		
+		chooseBeepFrag = new ChooseBeepFragment();  
+		emojiFrag = new EmojiconsFragment();
 	    mMessagesListView = (ListView) chatFrag.findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
 		chooseBeepButton = (ImageButton) chatFrag.findViewById(R.id.choosebeep_button);	
 		showEmojiButton = (ImageButton) chatFrag.findViewById(R.id.chatwindow_showemoji);
-		showKeyboardButton = (ImageButton) chatFrag.findViewById(R.id.chatwindow_showkeyboard_button);
 		chatInputEditText = (EmojiconEditText) chatFrag.findViewById(R.id.chatwindow_edittextwithemoji);
-		emojipopup.setSizeForSoftKeyboard();	
-		beeppopup.setSizeForSoftKeyboard();
-		emojipopup.setOnEmojiconClickedListener(new OnEmojiClickedListener() {
-
-            @Override
-            public void onEmojiconClicked(Emojicon emojicon) {
-            	chatInputEditText.append(emojicon.getEmoji());
-            }
-        });
-		
-		emojipopup.setOnEmojiconBackspaceClickedListener(new OnEmojiconBackspaceClickedListener() {
-
-		    @Override
-		    public void onEmojiconBackspaceClicked(View v) {
-		        KeyEvent event = new KeyEvent(
-		                 0, 0, 0, KeyEvent.KEYCODE_DEL, 0, 0, 0, 0, KeyEvent.KEYCODE_ENDCALL);
-		        chatInputEditText.dispatchKeyEvent(event);
-		    }
-		});
-		
-		beeppopup.setOnBeepClickedListener(new OnBeepClickedListener()
-		{
-
-			@Override
-			public void onBeepClicked(Beep beep) {
-				sendBeep(beep);				
-			}			
-		});
-	  
 		chooseBeepButton.setOnClickListener(new OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
@@ -161,11 +118,7 @@ public class ChatWindowFrag extends Fragment {
 		    	if(BlockedUser.isUserBlocked(mParticipantBBDID))
 		    		buildUnblockAlertMessageToUnblock(mParticipantBBDID);
 		    	else
-		    	{
-		    		chooseBeepPopup(true);
-		    		chooseBeepButton.setVisibility(View.GONE);
-	        		showKeyboardButton.setVisibility(View.VISIBLE);
-		    	}
+		    	  chooseBeepFrag(true);
 		    }
 		});	
 		
@@ -173,72 +126,37 @@ public class ChatWindowFrag extends Fragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				chooseEmojiPopup(true);	
-				showEmojiButton.setVisibility(View.GONE);
-        		showKeyboardButton.setVisibility(View.VISIBLE);
+				chooseEmojiFrag(true);				
 			}
 		});
 		
-		showKeyboardButton.setOnClickListener(new OnClickListener() {
+		chatInputEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
 			
 			@Override
-			public void onClick(View arg0) {
-				if(beeppopup.isShowing())
+			public void onFocusChange(View v, boolean hasFocus) {
+				if(hasFocus)
 				{
-					showKeyboardButton.setVisibility(View.GONE);
-					chooseBeepButton.setVisibility(View.VISIBLE);
-					beeppopup.dismiss();
+					chooseEmojiFrag(false);
+					chooseBeepFrag(false);
 				}
-				else if(emojipopup.isShowing())
-				{
-					showKeyboardButton.setVisibility(View.GONE);
-					showEmojiButton.setVisibility(View.VISIBLE);
-					emojipopup.dismiss();
-				}
-				
 			}
 		});
 		
-		//Set listener for keyboard open/close
-		emojipopup.setOnSoftKeyboardOpenCloseListener(new OnSoftKeyboardOpenCloseListener() {
-
-            @Override
-            public void onKeyboardOpen(int keyBoardHeight) {
-            	iskeyboardopen = true;            	
-                
-            }
-
-            @Override
-            public void onKeyboardClose() {
-                if(emojipopup.isShowing())
-                	emojipopup.dismiss();
-                if(beeppopup.isShowing())
-                	beeppopup.dismiss();
-                showEmojiButton.setVisibility(View.VISIBLE);
-                chooseBeepButton.setVisibility(View.VISIBLE);
-        		showKeyboardButton.setVisibility(View.GONE);
-                iskeyboardopen = false;
-            }
-        });
 		
-	chatInputEditText.setOnClickListener(new OnClickListener() {
-		
-		@Override
-		public void onClick(View arg0) {
-			if(emojipopup.isShowing())
-				emojipopup.dismiss();
-			if(beeppopup.isShowing())
-				beeppopup.dismiss();
-			showEmojiButton.setVisibility(View.VISIBLE);
-            chooseBeepButton.setVisibility(View.VISIBLE);
-    		showKeyboardButton.setVisibility(View.GONE);
-		}
-	});
 		
         //notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);   
         return chatFrag;
 }
-      
+	    
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        EmojiconsFragment.input(chatInputEditText, emojicon);
+    }
+
+    @Override
+    public void onEmojiconBackspaceClicked(View v) {
+        EmojiconsFragment.backspace(chatInputEditText);
+    }    
 
 
 @Override
@@ -265,8 +183,9 @@ public void onResume() {
 	} catch (RemoteException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
-	}	
 	}
+	
+}
 
     @Override
     public void onPause() {
@@ -308,46 +227,63 @@ public void onResume() {
     }
     
             
-    public void chooseBeepPopup(boolean show)
+    public void chooseBeepFrag(boolean show)
     {        
         BBDTracker.sendView("ChooseBeepView");
         BBDTracker.sendEvent("ChooseBeepView","ScreenOpen","choosebeep:open",1L);    
-        if(show) 
-        	if(iskeyboardopen)
-        	{
-        		beeppopup.showAtBottom();   
-        	}
-        	else
-        	{
-        		beeppopup.showAtBottomPending();
-        		chatInputEditText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
-        		chatInputEditText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));
-        		
-        	}
-        else
-        	beeppopup.dismiss();               
+        
+        if(fm!=null)
+        {
+	        FragmentTransaction ft = fm.beginTransaction();
+	        
+	       if(fm.getFragments()==null)
+	        {	        	
+	        	ft.add(R.id.choosebeep_container, chooseBeepFrag); 
+	        	//chooseBeepButton.setVisibility(View.GONE);
+	        }
+	        else if(show)
+	        {
+	        	ft.replace(R.id.choosebeep_container,chooseBeepFrag);
+	        	//chooseBeepButton.setVisibility(View.GONE);
+	        }
+	        else
+	        {
+	        	if(chooseBeepFrag.isVisible())
+	        		ft.hide(chooseBeepFrag);	
+	        	//chooseBeepButton.setVisibility(View.VISIBLE);
+	        }
+	        ft.commit();
+        }                 
         
     }
     
-    public void chooseEmojiPopup(boolean show)
+    public void chooseEmojiFrag(boolean show)
     {        
         BBDTracker.sendView("ChooseEmojiView");
-        BBDTracker.sendEvent("ChooseEmojiView","ScreenOpen","chooseemoji:open",1L);   
-        if(show) 
-        	if(iskeyboardopen)
-        		emojipopup.showAtBottom();   
-        	else
-        	{
-        		emojipopup.showAtBottomPending();
-        		//InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
-        		//imm.showSoftInput(chatInputEditText, 0);
-        		//chatInputEditText.performClick();
-        		chatInputEditText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
-        		chatInputEditText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP , 0, 0, 0));
-        		
-        	}
-        else
-        	emojipopup.dismiss();
+        BBDTracker.sendEvent("ChooseEmojiView","ScreenOpen","chooseemoji:open",1L);    
+        
+        if(fm!=null)
+        {
+	        FragmentTransaction ft = fm.beginTransaction();
+	        
+	       if(fm.getFragments()==null)
+	        {	        	
+	        	ft.add(R.id.choosebeep_container, emojiFrag); 
+	        	//chooseBeepButton.setVisibility(View.GONE);
+	        }
+	        else if(show)
+	        {
+	        	ft.replace(R.id.choosebeep_container, EmojiconsFragment.newInstance(false));
+	        	//chooseBeepButton.setVisibility(View.GONE);
+	        }
+	        else
+	        {
+	        	if(emojiFrag.isVisible())
+	        		ft.hide(emojiFrag);	
+	        	//chooseBeepButton.setVisibility(View.VISIBLE);
+	        }
+	        ft.commit();
+        }                 
         
     }
     
@@ -506,35 +442,7 @@ public void onResume() {
 	        alert.show();
 	    }
 
-
-		/**
-	     * To capture the result of IMM hide/show soft keyboard
-	     */
-	    private class IMMResult extends ResultReceiver {
-	        public int result = -1;
-	        public IMMResult() {
-	            super(null);
-	        }
-	        
-	        @Override 
-	        public void onReceiveResult(int r, Bundle data) {
-	            result = r;
-	        }
-	        
-	        // poll result value for up to 500 milliseconds
-	        public int getResult() {
-	            try {
-	                int sleep = 0;
-	                while (result == -1 && sleep < 500) {
-	                    Thread.sleep(100);
-	                    sleep += 100;
-	                }
-	            } catch (InterruptedException e) {
-	                Log.e("IMMResult", e.getMessage());
-	            }
-	            return result;
-	        }
-	    }		
+	    
  	    
  
 //this is callback method executed on client when ChatService receives a message	

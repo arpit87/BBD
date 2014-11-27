@@ -5,17 +5,20 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.bakarapp.R;
 import com.bakarapp.HelperClasses.Beep;
+import com.bakarapp.HelperClasses.FavBeeps;
+import com.bakarapp.HelperClasses.LikedBeeps;
 import com.bakarapp.HelperClasses.ToastTracker;
 
 public class TrendListAdapter extends BaseAdapter{
@@ -55,7 +58,7 @@ public class TrendListAdapter extends BaseAdapter{
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Beep thisBeep =  mTrendList.get(position);
+		final Beep thisBeep =  mTrendList.get(position);
 		View thisBeepView=convertView;
         if( thisBeepView == null)        
         	thisBeepView = inflater.inflate(R.layout.trend_listrow, null);
@@ -64,48 +67,59 @@ public class TrendListAdapter extends BaseAdapter{
         TextView beepstr_view = (TextView)thisBeepView.findViewById(R.id.trend_listrow_beepstr);
         TextView beepby_view = (TextView)thisBeepView.findViewById(R.id.trend_listrow_beepby);
         TextView likenum_view = (TextView)thisBeepView.findViewById(R.id.trend_listrow_likes_num);
-        final ImageButton like_button = (ImageButton)thisBeepView.findViewById(R.id.trend_listrow_like_button);
-        final ImageButton fav_button = (ImageButton)thisBeepView.findViewById(R.id.trend_listrow_fav);
+        final ToggleButton like_button = (ToggleButton)thisBeepView.findViewById(R.id.trend_listrow_like_button);
+        final ToggleButton fav_button = (ToggleButton)thisBeepView.findViewById(R.id.trend_listrow_fav);
         TextView rebeepnum_view = (TextView)thisBeepView.findViewById(R.id.trend_listrow_rebeep_num);
         ImageButton rebeep_button = (ImageButton)thisBeepView.findViewById(R.id.trend_listrow_rebeep_button);
+        if(FavBeeps.isFavourite(thisBeep))
+        	fav_button.setChecked(true);
+        else
+        	fav_button.setChecked(false);
         
-        /*like_button.setOnTouchListener(new OnTouchListener() {
+        if(LikedBeeps.isBeepLiked(thisBeep.getBeep_id()))
+        	like_button.setChecked(true);
+        else
+        	like_button.setChecked(false);
+        
+        like_button.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(!like_button.isPressed())
-				{
-					like_button.setPressed(true);	
-					ToastTracker.showToast("Liked!!");
-				}
-				else
-				{
-					like_button.setPressed(false);	
-					ToastTracker.showToast("Unliked..");
-				}
-				return true;
+			public void onClick(View togglebutton) {
+				boolean ischecked = like_button.isChecked();
+				if(ischecked)
+				   {		
+					   LikedBeeps.addtoList(thisBeep.getBeep_id());
+					   ToastTracker.showToast("liked");
+				   }
+				   else
+				   {
+					   LikedBeeps.deleteFromList(thisBeep.getBeep_id());
+					   ToastTracker.showToast("unliked");
+				   }
+				
 			}
 		});
         
-        fav_button.setOnTouchListener(new OnTouchListener() {
+                
+        fav_button.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				if(!fav_button.isPressed())
+			public void onClick(View togglebutton) {
+				boolean ischecked = fav_button.isChecked();
+				if(ischecked)
 				{
-					fav_button.setPressed(true);
-					ToastTracker.showToast("Added to favourite");
-				}
-				else
-				{
-					fav_button.setPressed(false);	
-					ToastTracker.showToast("Removed from favourite");
-				}
-				return true;
+				   FavBeeps.addtoFavBeeps(thisBeep);
+				   ToastTracker.showToast("Added to favourite list");
+			   }
+			   else
+			   {
+				   FavBeeps.deleteFromFavBeeps(thisBeep);
+				   ToastTracker.showToast("Removed from favourite list");
+			   }
 			}
-		});*/
+		});
         
-       
+        
         rank_view.setText("#"+Integer.toString(position+1));
         beepstr_view.setText(thisBeep.getBeepStr());
         beepby_view.setText("by BA pin " + Integer.toString(thisBeep.getBeepCreator()));

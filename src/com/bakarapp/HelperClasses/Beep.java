@@ -50,7 +50,7 @@ public class Beep {
         }
         
         try {
-        	beep_id = allInfo.getInt(UserAttributes.BEEPID);
+        	beep_id = allInfo.getInt("id"); ///in beeplist "id" is comng not "beepid" chk
         } catch (JSONException e) {
         	
         }
@@ -97,9 +97,17 @@ public class Beep {
 	public int getBeepCreator() {
 		return creator_bbdid;
 	}
+	
+	public String getDateCreated() {
+		return date_created;
+	}
 
 	public void setBeep_str(String beep_str) {
 		this.beep_str = beep_str;
+	}
+	
+	public void setDateCreated(String datecreated) {
+		date_created = datecreated;
 	}
 
 	public void setLevel(int level) {

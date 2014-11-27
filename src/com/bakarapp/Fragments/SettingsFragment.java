@@ -57,9 +57,9 @@ public class SettingsFragment extends Fragment{
         bbaPin = (TextView) settingsView.findViewById(R.id.settings_bba_pin);
         
         
-        bbaPin.setText(StringUtils.getSpannedText("BBA Pin", BBAPin));
+        bbaPin.setText(StringUtils.getSpannedText("BA Pin", BBAPin));
         
-        levelValue.setText(levelitems[ThisUserConfig.getInstance().getInt(ThisUserConfig.LEVEL)]);
+        levelValue.setText(levelitems[ThisUserConfig.getInstance().getInt(ThisUserConfig.LEVEL)-1]);
         
         if(ThisAppConfig.getInstance().getInt(ThisAppConfig.NOTIFICATION_SETTINGS)==0)
         	notificationSettingsValue.setText("Off");
@@ -146,7 +146,8 @@ public class SettingsFragment extends Fragment{
     // Creating and Building the Dialog 
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     builder.setTitle("Set The Bakar Level");
-    builder.setSingleChoiceItems(levelitems, -1, new DialogInterface.OnClickListener() {
+    int currentlevel = ThisUserConfig.getInstance().getInt(ThisUserConfig.LEVEL);
+    builder.setSingleChoiceItems(levelitems, currentlevel, new DialogInterface.OnClickListener() {
     public void onClick(DialogInterface dialog, int item) {
        
     	

@@ -5,7 +5,7 @@ import java.util.List;
 import org.json.JSONArray;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 
 import com.bakarapp.R;
 import com.bakarapp.HTTPClient.CreateAndSendBeepRequest;
-import com.bakarapp.HTTPClient.CreateBeepRequest;
 import com.bakarapp.HTTPClient.GetBeepListRequest;
 import com.bakarapp.HTTPClient.HttpClient;
 import com.bakarapp.HTTPClient.HttpRequest;
@@ -31,7 +30,7 @@ import com.bakarapp.Users.ThisUser;
 import com.bakarapp.Util.Logger;
 import com.bakarapp.Util.StringUtils;
 
-public class ChooseBeepFragment extends Fragment{
+public class ChooseBeepFragment extends DialogFragment{
 	
 	private static final String TAG = "com.BhakBhaodi.Fragments.ChooseBeepFragment";
 	private List<Beep> beepListShowing = null;

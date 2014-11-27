@@ -1,42 +1,52 @@
-package com.bakarapp.Fragments;
+package com.bakarapp.Activities;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
+import android.content.ComponentName;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.RemoteException;
-import android.os.ResultReceiver;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.bakarapp.R;
-import com.bakarapp.Activities.BhakBhosdiActivity;
 import com.bakarapp.ChatClient.ChatListViewAdapter;
 import com.bakarapp.ChatClient.ChatMessage;
 import com.bakarapp.ChatClient.IMessageListener;
+import com.bakarapp.ChatService.ChatService;
 import com.bakarapp.ChatService.IChatAdapter;
 import com.bakarapp.ChatService.IChatManager;
+import com.bakarapp.ChatService.IXMPPAPIs;
 import com.bakarapp.ChatService.Message;
+import com.bakarapp.HTTPClient.CreateAndSendBeepRequest;
+import com.bakarapp.HTTPClient.HttpClient;
+import com.bakarapp.HTTPClient.HttpRequest;
 import com.bakarapp.HTTPServer.ServerConstants;
 import com.bakarapp.HelperClasses.ActiveChat;
+import com.bakarapp.HelperClasses.AlertDialogBuilder;
 import com.bakarapp.HelperClasses.Beep;
 import com.bakarapp.HelperClasses.BlockedUser;
 import com.bakarapp.HelperClasses.ThisUserConfig;
+import com.bakarapp.HelperClasses.ToastTracker;
 import com.bakarapp.Platform.Platform;
 import com.bakarapp.Util.BBDTracker;
 import com.bakarapp.Util.Logger;
@@ -51,7 +61,7 @@ import com.bakarapp.emojiconpopup.EmojiconsPopup.OnEmojiconBackspaceClickedListe
 import com.bakarapp.emojiconpopup.EmojiconsPopup.OnSoftKeyboardOpenCloseListener;
 
 
-public class ChatWindowFrag extends Fragment {
+public class ChatWindowActivity extends FragmentActivity {
 	
 	private static String TAG = "com.bakarapp.ChatClient.ChatWindow";
 	public static String PARTICIPANT = "participant";
@@ -62,11 +72,13 @@ public class ChatWindowFrag extends Fragment {
     private ImageButton chooseBeepButton;
     private ImageButton showEmojiButton;
     private ImageButton showKeyboardButton;
+    private ImageButton sendChatButton;
     
     private Menu mMenu;
     private IChatAdapter chatAdapter;
     private IChatManager mChatManager;   
     private IMessageListener mMessageListener = new SBOnChatMessageListener();   
+    private final ChatServiceConnection mChatServiceConnection = new ChatServiceConnection();
     
     private String mParticipantBBDID = "";
     private String mParticipantName = "";     
@@ -76,55 +88,52 @@ public class ChatWindowFrag extends Fragment {
     private ChatListViewAdapter mMessagesListAdapter = null;
     private boolean mBinded = false;
     private String mThiUserChatUserName = "";
-    //private String mThisUserChatPassword = "";
+    private String mThisUserChatPassword = "";
     //private String mThisUserChatNickName =  "";
 	private NotificationManager notificationManager;
-    private boolean mFBLoggedIn = false;
+    View contentView;
     //private ChooseBeepFragment chooseBeepFrag;
     //EmojiconsFragment emojiFrag;
     EmojiconsPopup emojipopup ;
     BeepsPopup beeppopup ;
-    EmojiconEditText chatInputEditText;
-    View chatFrag = null;
+    EmojiconEditText chatInputEditText;   
     boolean iskeyboardopen = false;
-    OnBeepClickedListener mBeepClickListener;
    
+    ActionBar ab;
+    private IXMPPAPIs xmppApis = null;
+    private boolean sendAsBeep = false;
+    int maxEditBeepLength = 50;
+    Beep thisBlankBeep ;
        
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);	   
-        mMessagesListAdapter = new ChatListViewAdapter(getActivity());
-        notificationManager =  (NotificationManager) getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
+        setContentView(R.layout.chatwindow);
+        contentView = this.findViewById(android.R.id.content);
+        mMessagesListAdapter = new ChatListViewAdapter(this);
+        notificationManager =  (NotificationManager) this.getSystemService(this.NOTIFICATION_SERVICE);
         mMyNickName = ThisUserConfig.getInstance().getString(ThisUserConfig.MYNICK);
+        ab= getActionBar();
         
- }
-    
-    
-		    
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-	    	
-		super.onCreate(savedInstanceState);		
-		if(chatFrag == null)
-			chatFrag = inflater.inflate(R.layout.chatwindow,null);
-		else
-		{
-			ViewGroup parent = (ViewGroup) chatFrag.getParent();
-			if(parent!=null)
-				parent.removeView(chatFrag);
-		}
+        ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar));
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);       
+        ab.setDisplayHomeAsUpEnabled(false);
+        ab.setDisplayShowTitleEnabled(true);
+        
+      
+				
 		//chooseBeepFrag = new ChooseBeepFragment();  
 		//emojiFrag = new EmojiconsFragment();
-		emojipopup = new EmojiconsPopup(chatFrag, getActivity());
-		beeppopup = new BeepsPopup(chatFrag, getActivity());
+		emojipopup = new EmojiconsPopup(contentView, this);
+		beeppopup = new BeepsPopup(contentView, this);
 		
-	    mMessagesListView = (ListView) chatFrag.findViewById(R.id.chat_messages);
+	    mMessagesListView = (ListView) findViewById(R.id.chat_messages);
 	    mMessagesListView.setAdapter(mMessagesListAdapter);
-		chooseBeepButton = (ImageButton) chatFrag.findViewById(R.id.choosebeep_button);	
-		showEmojiButton = (ImageButton) chatFrag.findViewById(R.id.chatwindow_showemoji);
-		showKeyboardButton = (ImageButton) chatFrag.findViewById(R.id.chatwindow_showkeyboard_button);
-		chatInputEditText = (EmojiconEditText) chatFrag.findViewById(R.id.chatwindow_edittextwithemoji);
+		chooseBeepButton = (ImageButton) findViewById(R.id.choosebeep_button);	
+		showEmojiButton = (ImageButton) findViewById(R.id.chatwindow_showemoji);
+		showKeyboardButton = (ImageButton) findViewById(R.id.chatwindow_showkeyboard_button);
+		chatInputEditText = (EmojiconEditText) findViewById(R.id.chatwindow_edittextwithemoji);
+		sendChatButton  = (ImageButton) findViewById(R.id.chatwindow_sendchat);
 		emojipopup.setSizeForSoftKeyboard();	
 		beeppopup.setSizeForSoftKeyboard();
 		emojipopup.setOnEmojiconClickedListener(new OnEmojiClickedListener() {
@@ -150,22 +159,31 @@ public class ChatWindowFrag extends Fragment {
 
 			@Override
 			public void onBeepClicked(Beep beep) {
-				sendBeep(beep);				
+				if(StringUtils.isBlank(beep.getBeepStr()))
+				{
+					sendAsBeep = true;
+					chooseBeepPopup(false);
+					chatInputEditText.setText("");
+	        		chatInputEditText.setHint("Type your beep now..");
+	        		chooseBeepButton.setVisibility(View.VISIBLE);
+	        		showKeyboardButton.setVisibility(View.GONE);
+	        		showEmojiButton.setVisibility(View.VISIBLE); 
+	        		thisBlankBeep = beep;
+				}
+				else
+					sendBeep(beep);				
 			}			
 		});
 	  
 		chooseBeepButton.setOnClickListener(new OnClickListener() {
 		    @Override
 		    public void onClick(View v) {
-		    	BBDTracker.sendEvent("ChatWindow","ButtonClick","chatwindow:click:send",1L);
-		    	if(BlockedUser.isUserBlocked(mParticipantBBDID))
-		    		buildUnblockAlertMessageToUnblock(mParticipantBBDID);
-		    	else
-		    	{
-		    		chooseBeepPopup(true);
-		    		chooseBeepButton.setVisibility(View.GONE);
-	        		showKeyboardButton.setVisibility(View.VISIBLE);
-		    	}
+		    	BBDTracker.sendEvent("ChatWindow","ButtonClick","chatwindow:click:choosebeep",1L);
+		    	
+	    		chooseBeepPopup(true);
+	    		chooseBeepButton.setVisibility(View.GONE);
+        		showKeyboardButton.setVisibility(View.VISIBLE);
+        		showEmojiButton.setVisibility(View.VISIBLE);        		
 		    }
 		});	
 		
@@ -176,6 +194,7 @@ public class ChatWindowFrag extends Fragment {
 				chooseEmojiPopup(true);	
 				showEmojiButton.setVisibility(View.GONE);
         		showKeyboardButton.setVisibility(View.VISIBLE);
+        		chooseBeepButton.setVisibility(View.VISIBLE);
 			}
 		});
 		
@@ -187,12 +206,14 @@ public class ChatWindowFrag extends Fragment {
 				{
 					showKeyboardButton.setVisibility(View.GONE);
 					chooseBeepButton.setVisibility(View.VISIBLE);
+					showEmojiButton.setVisibility(View.VISIBLE);
 					beeppopup.dismiss();
 				}
 				else if(emojipopup.isShowing())
 				{
 					showKeyboardButton.setVisibility(View.GONE);
 					showEmojiButton.setVisibility(View.VISIBLE);
+					chooseBeepButton.setVisibility(View.VISIBLE);
 					emojipopup.dismiss();
 				}
 				
@@ -235,23 +256,69 @@ public class ChatWindowFrag extends Fragment {
 		}
 	});
 		
-        //notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);   
-        return chatFrag;
-}
-      
-
-
+	sendChatButton.setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View arg0) {
+			
+		String InputStr = chatInputEditText.getText().toString();
+		if(StringUtils.isBlank(InputStr))
+		{
+			AlertDialogBuilder.showOKDialog(ChatWindowActivity.this, "Bhai", "Kuch likh to de pehle");	
+			return;
+		}
+		
+		if(sendAsBeep)
+		{	
+			if(InputStr.length()>maxEditBeepLength)
+				AlertDialogBuilder.showOKDialog(ChatWindowActivity.this, "Sorry boss", "Max 50 char allowed");
+			else
+			{							
+				//final Beep newBeep = new Beep();
+				thisBlankBeep.setBeep_str(InputStr);
+				String bbdid = ThisUserConfig.getInstance().getString(ThisUserConfig.BBD_ID);
+				thisBlankBeep.setCreator_bbdid(Integer.parseInt(bbdid));
+				int level = ThisUserConfig.getInstance().getInt(ThisUserConfig.LEVEL);
+				thisBlankBeep.setLevel(level);
+				//img comes random if not set				
+				sendBeep(thisBlankBeep);
+				
+				//send beep to server
+				HttpRequest createBeepReq= new CreateAndSendBeepRequest(InputStr,level,mParticipantBBDID,bbdid,null);
+				HttpClient.getInstance().executeRequest(createBeepReq);
+				sendAsBeep = false;
+				chatInputEditText.setText("");
+				chatInputEditText.setHint("");
+				ToastTracker.showToast("New beep in your name created");
+			}
+		  }
+		  else
+		  {
+			sendChat(InputStr);
+			chatInputEditText.setText("");
+		  }
+			
+			
+	}});
+		
+        
+ }
+    
+ 
 @Override
 public void onResume() {
 	super.onResume();
-	//set participant before binding	
-	Bundle bundle = this.getArguments();
-	mParticipantBBDID = bundle.getString(PARTICIPANT,"");	
+	//set participant before binding
+	
+	mParticipantBBDID = getIntent().getStringExtra(PARTICIPANT);	
     if(StringUtils.isBlank(mParticipantBBDID))
 	  return;
     notificationManager.cancel(mParticipantBBDID.hashCode());
-	mParticipantName = bundle.getString(PARTICIPANT_NAME,"");
+    mParticipantName = getIntent().getStringExtra(PARTICIPANT_NAME);
+    ab.setTitle("  "+mParticipantName);
+    ab.setSubtitle("    "+mParticipantBBDID);
 	mThiUserChatUserName = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATUSERID);
+	mThisUserChatPassword = ThisUserConfig.getInstance().getString(ThisUserConfig.CHATPASSWORD);
 	
 	//mContactNameTextView.setText(mParticipantName);
 	//mParticipantImageURL = StringUtils.getFBPicURLFromFBID(mParticipantBBDID);
@@ -260,16 +327,43 @@ public void onResume() {
 	//mContactNameTextView.setText(mReceiver);
 	//getParticipantInfoFromFBID(mParticipantFBID);
 	
-	try {			
-			changeOrStartNewCurrentChat();
-	} catch (RemoteException e1) {
-		// TODO Auto-generated catch block
-		e1.printStackTrace();
-	}	
+	if (!mBinded) 
+		bindToService();
+	else
+		try {			
+				changeCurrentChat();
+		} catch (RemoteException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
-    @Override
-    public void onPause() {
+	//in already open chatWindow this function switches chats
+	private void changeCurrentChat() throws RemoteException {
+		
+		chatAdapter = mChatManager.getChat(mParticipantBBDID);
+		if (chatAdapter != null) {
+			chatAdapter.setOpen(true);
+			Logger.i(TAG, "open chat is of:"+chatAdapter.getParticipant());
+			chatAdapter.addMessageListener(mMessageListener);
+			fetchPastMsgsIfAny();
+		}
+		//getParticipantInfoFromFBID(participant);	    	
+		
+	    }
+
+	private void bindToService() {
+	    if (Platform.getInstance().isLoggingEnabled()) Log.d( TAG, "binding chat to service" );        
+		
+	   Intent i = new Intent(getApplicationContext(),ChatService.class);
+	  
+	   getApplicationContext().bindService(i, mChatServiceConnection, BIND_AUTO_CREATE);	  
+	   mBinded = true;
+	
+	}
+
+	@Override
+    protected void onPause() {
 	super.onPause();
 	
 	    if (chatAdapter != null) {
@@ -293,11 +387,21 @@ public void onResume() {
     public void onDestroy() {
     	
     	super.onDestroy();
+    	if (mBinded) {
+    		releaseService();
+    	    mBinded = false;
+    	}
+    	xmppApis = null;	
     	chatAdapter = null;
     	mChatManager = null;    	
     }   
     
-       
+    
+    @Override
+	public void onNewIntent(Intent intent) {
+	super.onNewIntent(intent);
+	setIntent(intent);	
+    }
     
     @Override
     public void onStart(){
@@ -305,6 +409,79 @@ public void onResume() {
         BBDTracker.sendView("ChatWindow");
         BBDTracker.sendEvent("ChatWindow","ScreenOpen","chatwindow:open",1L);
         //EasyTracker.getInstance().activityStart(this);
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.mMenu = menu;
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.chat_menu, menu);
+        if(BlockedUser.isUserBlocked(mParticipantBBDID))
+		{
+        	mMenu.getItem(mMenu.size()-1).setTitle("UnBlock");
+		}
+        else
+        {
+        	mMenu.getItem(mMenu.size()-1).setTitle("Block");
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+    	BBDTracker.sendEvent("ChatWindow","MenuOpen","chatwindowmenu:open",1L);
+        switch (menuItem.getItemId())
+        {
+        case R.id.chat_menu_block:        	
+        	if(BlockedUser.isUserBlocked(mParticipantBBDID))
+			{
+        		BBDTracker.sendEvent("ChatWindow","MenuClick","chatwindowmenu:click:unblock",1L);
+				BlockedUser.deleteFromList(mParticipantBBDID);
+				Toast.makeText(ChatWindowActivity.this,mParticipantName + " unblocked", Toast.LENGTH_SHORT).show();
+				menuItem.setTitle("Block");
+			}
+			else
+			{
+				BBDTracker.sendEvent("ChatWindow","MenuClick","chatwindowmenu:click:block",1L);
+				BlockedUser.addtoList(mParticipantBBDID, mParticipantName);
+		        Toast.makeText(ChatWindowActivity.this,mParticipantName + " blocked", Toast.LENGTH_SHORT).show();
+		        menuItem.setTitle("UnBlock");
+			}
+        	break;  
+        /*case R.id.chat_menu_hopin_profile:
+        	BBDTracker.sendEvent("ChatWindow","MenuClick","chatwindowmenu:click:hopinprofile",1L);
+        	NearbyUser n = CurrentNearbyUsers.getInstance().getNearbyUserWithFBID(mParticipantFBID);        	
+        	if(n!=null)
+        	{
+	        	Intent hopinNewProfile = new Intent(getApplicationContext(),OtherUserProfileActivityNew.class);
+		    	hopinNewProfile.putExtra("fb_info", n.getUserFBInfo().getJsonObj().toString());
+		    	hopinNewProfile.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		    	startActivity(hopinNewProfile);
+        	}
+        	else
+        	{	        	
+	        	ProgressHandler.showInfiniteProgressDialoge(ChatWindow.this, "Fetching user profile", "Please wait..",null);
+		    	GetOtherUserProfileAndShowPopup req = new GetOtherUserProfileAndShowPopup(mParticipantFBID);
+				SBHttpClient.getInstance().executeRequest(req);	
+        	}
+			break;
+        case R.id.chat_menu_fb_profile:	
+        	BBDTracker.sendEvent("ChatWindow","MenuClick","chatwindowmenu:click:fbprofile",1L);
+        	CommunicationHelper.getInstance().onFBIconClickWithUser(this, mParticipantFBID, mParticipantName);
+        	break;*/
+        default:
+        	break;     
+        } 
+        return super.onOptionsItemSelected(menuItem);
+    }   
+    
+    private void releaseService() {
+		if(mChatServiceConnection != null) {
+			getApplicationContext().unbindService(mChatServiceConnection);    			   			
+			if (Platform.getInstance().isLoggingEnabled()) Log.d( TAG, "chat Service released from chatwindow" );
+		} else {
+			//ToastTracker.showToast("Cannot unbind - service not bound", Toast.LENGTH_SHORT);
+		}
     }
     
             
@@ -339,7 +516,7 @@ public void onResume() {
         	else
         	{
         		emojipopup.showAtBottomPending();
-        		//InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(getActivity().INPUT_METHOD_SERVICE);
+        		//InputMethodManager imm = (InputMethodManager)this.getSystemService(this.INPUT_METHOD_SERVICE);
         		//imm.showSoftInput(chatInputEditText, 0);
         		//chatInputEditText.performClick();
         		chatInputEditText.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN , 0, 0, 0));
@@ -356,7 +533,48 @@ public void onResume() {
     
 	    public String getParticipantBBDID() {
 			return mParticipantBBDID;
-		}	    
+		}	  
+	    
+	    public void sendChat(String message) {	
+			String inputContent = message;
+			ChatMessage lastMessage = null;				
+			 if(!"".equals(inputContent))
+			{
+				Message newMessage = new Message(mParticipantBBDID);
+				newMessage.setBody(inputContent);
+				newMessage.setFrom(mThiUserChatUserName+"@"+ServerConstants.CHATSERVERIP);			
+				newMessage.setTo(mParticipantBBDID+"@"+ServerConstants.CHATSERVERIP);
+				newMessage.setSubject(mMyNickName);			
+				newMessage.setUniqueMsgIdentifier(System.currentTimeMillis());	
+				newMessage.setTimeStamp(StringUtils.gettodayDateInFormat("hh:mm"));
+				newMessage.setStatus(ChatMessage.SENDING);
+				newMessage.setImageName("");
+				mMessagesListAdapter.addMessage(new ChatMessage(mThiUserChatUserName, mParticipantBBDID,inputContent, false, StringUtils.gettodayDateInFormat("hh:mm"),
+						                                          ChatMessage.SENDING,newMessage.getUniqueMsgIdentifier(),""));
+				mMessagesListAdapter.notifyDataSetChanged();
+				
+			  //send msg to xmpp
+				 try {
+					if (chatAdapter == null) {										
+						chatAdapter = mChatManager.createChat(mParticipantBBDID, mMessageListener);					
+					}
+					else
+					{
+						chatAdapter.setOpen(true);
+						Logger.i(TAG, "open chat is of:"+chatAdapter.getParticipant());
+						chatAdapter.sendMessage(newMessage);
+					}
+					
+				    } catch (RemoteException e) {
+				    	sendingFailed(lastMessage);
+					if (Platform.getInstance().isLoggingEnabled()) Log.e(TAG, e.getMessage());
+				    }
+			   
+			}	
+			 
+			 //server calls
+			  
+			}
 	    
 		public void sendBeep(Beep beep) {	
 		String inputContent = beep.getBeepStr();
@@ -395,7 +613,7 @@ public void onResume() {
 		   
 		}	
 		 
-		 //server calls
+		
 		  
 		}
 	    
@@ -407,25 +625,7 @@ public void onResume() {
 	    	mMessagesListAdapter.notifyDataSetChanged();
 	    }
 	  	
-	    //in already open chatWindow this function switches chats
-	    private void changeOrStartNewCurrentChat() throws RemoteException {
-	    
-	    	if(mChatManager == null)
-			{
-				mChatManager = ((BhakBhosdiActivity)getActivity()).getChatManager();    
-			} 
-			Logger.d(TAG, "Chat manager got");				
-			chatAdapter = mChatManager.getChat(mParticipantBBDID);
-	    	if (chatAdapter != null) {
-	    		chatAdapter.setOpen(true);
-	    		Logger.i(TAG, "open chat is of:"+chatAdapter.getParticipant());
-	    		chatAdapter.addMessageListener(mMessageListener);
-	    		fetchPastMsgsIfAny();
-	    	}
-			
-			
-	        }
-	    
+	   	    
 	    /**
 	     * Get all messages from the current chat and refresh the activity with them.
 	     * @throws RemoteException If a Binder remote-invocation error occurred.
@@ -485,11 +685,65 @@ public void onResume() {
 		}
 		return result;
 	    }
-	        
+	    
+	    public void initializeChatWindow() {
+	    	
+           	
+	    	if(mChatManager == null)
+			{
+				try {
+					mChatManager = xmppApis.getChatManager();
+    			if (mChatManager != null) {
+    				Logger.d(TAG, "Chat manager got");
+    				chatAdapter = mChatManager.createChat(mParticipantBBDID, mMessageListener);
+    				if(chatAdapter!=null)
+    				{
+						chatAdapter.setOpen(true);
+						Logger.i(TAG, "open chat is of:"+chatAdapter.getParticipant());
+						fetchPastMsgsIfAny();
+    				}
+    			   // mChatManager.addChatCreationListener(mChatManagerListener);
+    			    //changeCurrentChat(thisUserID);
+    			}
+    			
+    		    } catch (RemoteException e) {
+    			if (Platform.getInstance().isLoggingEnabled()) Log.e(TAG, e.getMessage());
+    		    }   
+			}		
+	    	
+	          
+	    	
+	    }
+	    
+	    private final class ChatServiceConnection implements ServiceConnection{
+	    	
+	    	@Override
+	    	public void onServiceConnected(ComponentName className, IBinder boundService) {
+	    		//ToastTracker.showToast("onServiceConnected called", Toast.LENGTH_SHORT);
+	    		if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"onServiceConnected called");
+	    		xmppApis = IXMPPAPIs.Stub.asInterface((IBinder)boundService);	    		
+	    		try {
+					xmppApis.loginAsync(mThiUserChatUserName, mThisUserChatPassword);
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		initializeChatWindow();    	
+	    		if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"service connected");
+	    	}
 
+	    	@Override
+	    	public void onServiceDisconnected(ComponentName arg0) {
+	    		//ToastTracker.showToast("onService disconnected", Toast.LENGTH_SHORT);
+	    		xmppApis = null;   		
+	    	    
+	    		if (Platform.getInstance().isLoggingEnabled()) Log.d(TAG,"service disconnected");
+	    	}
+
+	    } 
 	    
 		private void buildUnblockAlertMessageToUnblock(final String fbid) {
-	        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+	        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 	        builder.setMessage("Do you really want to unblock "+ mParticipantName + "?")
 	                .setCancelable(false)
 	                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -506,37 +760,6 @@ public void onResume() {
 	        alert.show();
 	    }
 
-
-		/**
-	     * To capture the result of IMM hide/show soft keyboard
-	     */
-	    private class IMMResult extends ResultReceiver {
-	        public int result = -1;
-	        public IMMResult() {
-	            super(null);
-	        }
-	        
-	        @Override 
-	        public void onReceiveResult(int r, Bundle data) {
-	            result = r;
-	        }
-	        
-	        // poll result value for up to 500 milliseconds
-	        public int getResult() {
-	            try {
-	                int sleep = 0;
-	                while (result == -1 && sleep < 500) {
-	                    Thread.sleep(100);
-	                    sleep += 100;
-	                }
-	            } catch (InterruptedException e) {
-	                Log.e("IMMResult", e.getMessage());
-	            }
-	            return result;
-	        }
-	    }		
- 	    
- 
 //this is callback method executed on client when ChatService receives a message	
 private class SBOnChatMessageListener extends IMessageListener.Stub {
 	//this method appends to current chat, we open new chat only on notification tap or user taps on list
