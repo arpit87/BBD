@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bakarapp"
-    android:versionCode="3"
-    android:versionName="BBD 1.0" >
+    android:versionCode="4"
+    android:versionName="BBD 1.4" >
 
     <uses-sdk
         android:minSdkVersion="12"
@@ -55,6 +55,11 @@
             </intent-filter>
         </activity>   
         
+        <activity android:name="com.bakarapp.Activities.ChatWindowActivity"            
+            android:screenOrientation="portrait" 
+            android:launchMode="singleTask" >   
+          </activity> 
+        
         <provider
            android:name="com.bakarapp.provider.HistoryContentProvider"
            android:authorities="com.bakarapp.provider.HistoryContentProvider" />
@@ -66,6 +71,13 @@
        <provider
                android:name="com.bakarapp.provider.ChatHistoryProvider"
                android:authorities="com.bakarapp.provider.ChatHistoryProvider" />
+        <provider
+               android:name="com.bakarapp.provider.FavBeepsProvider"
+               android:authorities="com.bakarapp.provider.FavBeepsProvider" />
+        
+        <provider
+               android:name="com.bakarapp.provider.LikedBeepsProvider"
+               android:authorities="com.bakarapp.provider.LikedBeepsProvider" />
 
        <provider
                android:name="com.bakarapp.provider.ActiveChatProvider"
