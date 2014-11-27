@@ -33,15 +33,17 @@
      android:textStyle="bold"
      />
  
-  <ImageButton 
+  <ToggleButton 
      android:id="@+id/trend_listrow_fav"
-     android:layout_width="50dip"
-     android:layout_height="50dip"
-     android:src="@drawable/button_favourite"
+     android:layout_width="35dip"
+     android:layout_height="35dip"
+     android:background="@drawable/button_favourite"
      android:layout_alignParentRight="true"
-     android:background="@android:color/transparent"
+    android:layout_marginTop="15dip"
      android:padding="8dip"
      android:scaleType="fitCenter"
+     android:textOn=""
+     android:textOff=""
      android:layout_marginRight="10dip"/>
  
   <TextView
@@ -82,15 +84,19 @@
      android:background="@color/light_gray"
      android:layout_below="@id/trend_listrow_separator"/> 
   
-  <ImageButton 
+  <ToggleButton 
      android:id="@+id/trend_listrow_like_button"
-     android:layout_width="50dip"
-     android:layout_height="50dip"
-     android:src="@drawable/button_like"
+     android:layout_width="35dip"
+     android:layout_height="35dip"
+     
+     android:background="@drawable/button_like"
      android:layout_toLeftOf="@id/trend_listrow_separator2"
-     android:background="@android:color/transparent"
+     android:layout_marginTop="8dip"
      android:padding="8dip"
      android:scaleType="fitCenter"
+     android:textOn=""
+    
+     android:textOff=""
      android:layout_below="@id/trend_listrow_separator"
      android:layout_marginRight="20dip"/>
   
@@ -101,7 +107,7 @@
       android:text="Likes"
       android:textSize="15sp"
       android:layout_alignTop="@id/trend_listrow_like_button"
-      android:layout_marginTop="8dip"
+      
       android:layout_alignParentLeft="true"
       android:layout_marginLeft="25dip"
       android:textColor="@color/gray"/>

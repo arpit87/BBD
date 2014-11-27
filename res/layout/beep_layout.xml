@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     style="@style/RedBeepStyle"
     android:text="bhak saale"
-    android:background="@drawable/beep_button"
+    
+    android:background="@drawable/white_bordered_button_transwhite"
     >
     
 

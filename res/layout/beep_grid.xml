@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent">
+<com.bakarapp.beeppopup.BeepsGridView        
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:item_margin="4dp"
+        app:column_count="2"
+         />
+
+<TextView
+    android:id="@+id/beep_gridview_textview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:text="Nothing here"
+    android:background="@android:color/transparent"
+    android:gravity="center"
+    android:visibility="gone"/>
+
+ </RelativeLayout>  

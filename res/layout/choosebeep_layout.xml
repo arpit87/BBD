@@ -5,7 +5,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <LinearLayout
-            android:id="@+id/emojis_tab"
+            android:id="@+id/beeps_tab"
             android:layout_width="match_parent"
             android:layout_height="50dip"
             android:layout_alignParentTop="true"
@@ -15,9 +15,9 @@
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:scaleType="center"
-                android:id="@+id/emojis_tab_0_recents"
-                android:src="@drawable/ic_emoji_recent_light"/>
+                android:scaleType="center"                
+                android:id="@+id/beeps_tab_0_recents"
+                android:src="@drawable/beepgrid_selector_fav"/>
         <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
@@ -28,8 +28,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:id="@+id/emojis_tab_1_people"
-                android:src="@drawable/ic_emoji_people_light"/>
+                android:id="@+id/beeps_tab_1_people"
+                android:src="@drawable/beepgrid_selector_1"/>
         <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
@@ -40,8 +40,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:id="@+id/emojis_tab_2_nature"
-                android:src="@drawable/ic_emoji_nature_light"/>
+                android:id="@+id/beeps_tab_2_nature"
+                android:src="@drawable/beepgrid_selector_2"/>
         <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
@@ -52,8 +52,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:id="@+id/emojis_tab_3_objects"
-                android:src="@drawable/ic_emoji_objects_light"/>
+                android:id="@+id/beeps_tab_3_objects"
+                android:src="@drawable/beepgrid_selector_3"/>
         <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
@@ -64,8 +64,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:id="@+id/emojis_tab_4_cars"
-                android:src="@drawable/ic_emoji_places_light"/>
+                android:id="@+id/beeps_tab_4_cars"
+                android:src="@drawable/beepgrid_selector_4"/>
         <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
@@ -76,8 +76,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="center"
-                android:id="@+id/emojis_tab_5_punctuation"
-                android:src="@drawable/ic_emoji_symbols_light"/>
+                android:id="@+id/beeps_tab_5_punctuation"
+                android:src="@drawable/beepgrid_selector_5"/>
         <View
                 android:layout_width="1px"
                 android:layout_height="match_parent"
@@ -87,12 +87,12 @@
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/emojis_backspace"
-                android:src="@drawable/sym_keyboard_delete_holo_dark"/>
+                android:id="@+id/beeps_refresh"
+                android:src="@drawable/beepgrid_selector_refresh"/>
     </LinearLayout>
     <android.support.v4.view.ViewPager
-        android:layout_below="@id/emojis_tab"
-        android:id="@+id/emojis_pager"
+        android:layout_below="@id/beeps_tab"
+        android:id="@+id/beeps_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -101,6 +101,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:layout_below="@id/emojis_tab"
+        android:layout_below="@id/beeps_tab"
         android:background="#8f8f8f"/>
+    <ProgressBar 
+       android:id="@+id/beepslist_loading"
+       android:layout_width="40dip"
+       android:layout_height="190dip" 
+       android:indeterminate="true"
+       android:layout_centerHorizontal="true"
+       android:layout_alignParentBottom="true"
+       android:visibility="gone" />
 </RelativeLayout>
